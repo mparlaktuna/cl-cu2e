@@ -1,20 +1,17 @@
 (in-package :cl-user)
 (defpackage cl-cu2e-test
   (:use :cl
-        :prove :cl-cu2e))
+        :prove :cl-cu2e 3d-vectors))
         
 (in-package :cl-cu2e-test)
 
-(plan 3)
+(plan 4)
 
-(let ((vec (make-vec2 1 2))
-      (a (make-aabb (make-vec2 1 2) (make-vec2 3 4)))
-      (b (make-aabb (make-vec2 3 5) (make-vec2 6 7)))
-      (c1 (make-circle 1 (make-vec2 1 2)))
-      (c2 (make-circle 1 (make-vec2 4 5))))
-  (ok (AABBvsAABB a b))
-  (ok (circle-intersect-p c1 c2)))
+(is-type (make-aabb (vec 1 2) (vec 3 4)) 'cl-cu2e::aabb)
+(is-type (make-circle 5 (vec 1 2)) 'cl-cu2e::circle)
+(is 5.0 (vlength (vec 3 4)))
 
-(isnt 1 #\1)
+(ok (circle-intersect-p (make-circle 2 (vec 0 0)) (make-circle 2 (vec 0 1))))
+(ok (circle-intersect-p (make-circle 2 (vec 0 0)) (make-circle 2 (vec 0 4.5))))
 
 (finalize)

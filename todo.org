@@ -1,0 +1,3 @@
+* DONE Switch to 3d-vectors package
+* DONE Write tests for all types with is-type
+* TODO Draw cirlces on clim
