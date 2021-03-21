@@ -3,7 +3,7 @@
 (defclass world2d-pane (clime:never-repaint-background-mixin basic-gadget)
   ((%background :initform (make-rgb-color 0.35 0.35 0.46) :reader background-color)
    (x :initform 0.0 :accessor x)
-   (y   :initform 0.0 :accessor y)   
+   (y :initform 0.0 :accessor y)   
    (dragging :initform nil :accessor dragging)))
 
 (defun draw-world2d (pane)
