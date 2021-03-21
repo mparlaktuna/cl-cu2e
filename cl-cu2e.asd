@@ -3,6 +3,7 @@
 (require :alexandria)
 (require :prove)
 (require :3d-vectors)
+(require :mcclim)
 
 (defsystem :cl-cu2e
   :description ""
@@ -10,10 +11,11 @@
   :author "Mustafa Parlaktuna <mparlaktuna@gmail.com>"
   :license "GPLv3"
   :serial t
-  :depends-on (:alexandria :3d-vectors)
+  :depends-on (:alexandria :3d-vectors :clim)
   :in-order-to ((test-op (test-op cl-cu2e-test)))
   :components ((:file "package")
-	       (:file "main")))
+	       (:file "main")
+               (:file "ui")))
  
 (defsystem cl-cu2e-test
   :depends-on (:cl-cu2e
