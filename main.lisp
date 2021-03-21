@@ -64,12 +64,12 @@
 ;;     (> total-r dist)))
 
 
-;; (defclass scene ()
-;;   ((models :initform nil :accessor scene-models)))
-
-
-  
+(defclass scene ()
+  ((models :initform nil :accessor scene-models)
+   (dims :initform nil :reader scene-dims)))
   
 (defclass scene2d (scene)
-  ())  
+  ((dims :initform 2)))
 
+(defmethod add-object ((scene scene) (object object))
+  (push object (scene-models scene)))
