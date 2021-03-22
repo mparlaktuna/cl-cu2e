@@ -5,7 +5,7 @@
         
 (in-package :cl-cu2e-test)
 
-(plan 5)
+(plan 0)
 
 
 (finalize)
