@@ -32,5 +32,11 @@
 		world3d))
 	 (1/10 interactor)))))
 
+(define-cl-cu2e-viewer-command (com-create-circle-cl-cu2e-viewer
+				:name t
+				:menu t)
+    ()
+  (format t "asd"))
+
 (defun run-cl-cu2e-viewer ()
   (run-frame-top-level (clim:make-application-frame 'cl-cu2e-viewer)))

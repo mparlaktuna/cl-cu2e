@@ -1,7 +1,7 @@
 (cl:in-package #:cl-user)
 
 (defpackage #:cl-cu2e
-  (:use #:clim-lisp :3d-vectors :clim)
+  (:use #:clim-lisp :3d-vectors :clim :hooks)
   (:export make-aabb
 	   make-circle
            make-vec2
