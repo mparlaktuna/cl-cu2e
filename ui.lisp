@@ -15,15 +15,15 @@
     (let ((scene (world-scene pane)))
       (mapcar (lambda (x) (draw-object pane x)) (scene-models scene))
       )))
-      ;; (mapcar #:draw-object (scene-models scene)))))
-    ;; 
-    ;; (draw-line* pane x0 y0 (/ x1 2) (/ y1 2) :ink (background-color pane))))
 
 (defmethod draw-object ((pane world2d-pane) (object object))
   (let* ((obj-vis (object-visual object))
 	 (pos (model-pos obj-vis))
          (shape (model-shape obj-vis)))
-    (draw-circle* pane (vx pos) (vy pos) (circle-radius shape) :filled nil :ink (background-color pane))))
+    (draw-shape pane pos shape)))
+
+(defmethod draw-shape ((pane world2d-pane) (pos vec2) (shape circle))
+  (draw-circle* pane (vx pos) (vy pos) (circle-radius shape) :filled nil :ink (background-color pane)))    
     
 (define-application-frame cl-cu2e-viewer ()
   ()
