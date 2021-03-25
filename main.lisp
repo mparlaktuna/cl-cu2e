@@ -67,11 +67,11 @@
 (defclass scene ()
   ((name :initarg :name :accessor scene-name)
    (models :initform nil :accessor scene-models)
+   (thread :initform nil :accessor scene-thread)
    (dims :initform nil :reader scene-dims)))
   
 (defclass scene2d (scene)
   ((dims :initform 2)))
-
 
 (defun make-scene (name)
   (make-instance 'scene :name name))
