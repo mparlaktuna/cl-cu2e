@@ -19,7 +19,7 @@
 (defclass physical-model (model) ())
 
 (defmethod make-physical-model ((pos vec2) (shape shape))
-  (make-instance 'visual-model :pos pos :shape shape))
+  (make-instance 'physical-model :pos pos :shape shape))
 
 (defclass shape () ())
 
