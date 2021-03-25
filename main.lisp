@@ -67,14 +67,24 @@
 (defclass scene ()
   ((name :initarg :name :accessor scene-name)
    (models :initform nil :accessor scene-models)
+   (dt :initarg dt :accessor scene-dt)
    (thread :initform nil :accessor scene-thread)
+   (continue-thread :initform #f :accessor continue-thread)
+   (scene-thread-hook :initform nil)
    (dims :initform nil :reader scene-dims)))
   
 (defclass scene2d (scene)
   ((dims :initform 2)))
 
-(defun make-scene (name)
+(defun make-scene (name dt)
   (make-instance 'scene :name name))
 
 (defmethod add-object ((scene scene) (object object))
   (push object (scene-models scene)))
+
+(defmethod start-thread ((scene scene))
+  (setf (scene-thread scene) (bt:make-thread
+			      (lambda ()
+				(sleep 1)
+                                (format t "~a" (scene-thread scene))
+				(format t "asd")))))

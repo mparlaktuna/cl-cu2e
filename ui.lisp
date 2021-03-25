@@ -29,7 +29,7 @@
   ()
   (:menu-bar t)
   (:panes
-   (world2d (make-pane 'world2d-pane :scene (make-scene 'sample)))
+   (world2d (make-pane 'world2d-pane :scene (make-scene 'sample 1)))
    (interactor :interactor
 	       :text-style (make-text-style :sans-serif nil nil)))
   (:layouts
@@ -47,6 +47,13 @@
 				   (make-visual-model (vec 100 50) (make-circle radius))))
     (handle-repaint gadget (or (pane-viewport-region gadget)
 			       (sheet-region gadget)))))
+
+(define-cl-cu2e-viewer-command (com-start-scene :name t)
+    ()
+  (let* ((gadget (find-pane-named *application-frame* 'world2d))
+	 (scene (world-scene gadget)))
+    (start-thread scene)))
+
 
 (defun run-cl-cu2e-viewer ()
   (run-frame-top-level (clim:make-application-frame 'cl-cu2e-viewer)))
