@@ -54,6 +54,12 @@
 	 (scene (world-scene gadget)))
     (start-thread scene)))
 
+(define-cl-cu2e-viewer-command (com-stop-scene :name t)
+    ()
+  (let* ((gadget (find-pane-named *application-frame* 'world2d))
+	 (scene (world-scene gadget)))
+    (stop-thread scene)))
+
 
 (defun run-cl-cu2e-viewer ()
   (run-frame-top-level (clim:make-application-frame 'cl-cu2e-viewer)))

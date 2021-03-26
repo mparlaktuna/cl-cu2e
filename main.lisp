@@ -1,12 +1,5 @@
 (in-package :cl-cu2e)
 
-
-;; (defmethod sat-x ((a vec2) (b vec2))
-;;   (> (vec2-x a) (vec2-x b)))
-
-;; (defmethod sat-y ((a vec2) (b vec2))
-;;   (> (vec2-y a) (vec2-y b)))
-
 (defclass model ()
   ((pos :initarg :pos :accessor model-pos)
    (shape :initarg :shape :accessor model-shape)))
@@ -36,40 +29,12 @@
 (defmethod make-object ((phy physical-model) (vis visual-model))
   (make-instance 'object :physical phy :visual vis))
 
-;; (defclass aabb ()
-;;   ((min :initarg :min :accessor aabb-min)
-;;    (max :initarg :max :accessor aabb-max)))
-
-;; (defmethod make-aabb ((vec-min vec2) (vec-max vec2))
-;;   (make-instance 'AABB :min vec-min :max vec-max))   
-
-;; (defmethod aabb-intersect-p ((a aabb) (b aabb)))
-;; (defmethod AABBvsAABB ((a AABB) (b AABB))
-;;   "fix there is a problem inverse of example function is not correct"
-;;   (let ((a-max (aabb-max a))
-;; 	(a-min (aabb-min a))
-;;         (b-max (aabb-max b))
-;;         (b-min (aabb-min b)))
-;;     (not (and (or (sat-x a-max b-min) (sat-x b-max a-min))
-;; 	      (or (sat-y a-max b-min) (sat-y b-max a-min))))))
-       
-
-;; (defmethod make-circle (radius (center vec2))
-;;   (make-instance 'circle :radius radius :center center))   
-
-;; (defmethod circle-intersect-p ((a circle) (b circle))
-;;   (let* ((total-r (expt (+ (circle-radius a) (circle-radius b)) 2))
-;; 	(dist-vec (v- (circle-center a) (circle-center b)))
-;; 	(dist (+ (expt (vx dist-vec) 2) (expt (vy dist-vec) 2))))
-;;     (> total-r dist)))
-
-
 (defclass scene ()
   ((name :initarg :name :accessor scene-name)
    (models :initform nil :accessor scene-models)
    (dt :initarg dt :accessor scene-dt)
    (thread :initform nil :accessor scene-thread)
-   (continue-thread :initform #f :accessor continue-thread)
+   (continue-thread :initform nil :accessor continue-thread)
    (scene-thread-hook :initform nil)
    (dims :initform nil :reader scene-dims)))
   
@@ -82,9 +47,14 @@
 (defmethod add-object ((scene scene) (object object))
   (push object (scene-models scene)))
 
+(defmethod stop-thread ((scene scene))
+  (setf (continue-thread scene) nil))
+  
 (defmethod start-thread ((scene scene))
+  (setf (continue-thread scene) T)
   (setf (scene-thread scene) (bt:make-thread
 			      (lambda ()
-				(sleep 1)
-                                (format t "~a" (scene-thread scene))
-				(format t "asd")))))
+				(loop while (continue-thread scene) do
+				     (sleep 2)
+				     (format t "after ~a~%" (continue-thread scene)))))))
+				
