@@ -14,10 +14,17 @@
 (defmethod handle-repaint ((pane world2d-pane) region)
   (with-bounding-rectangle* (x0 y0 x1 y1) (sheet-region pane)
     (draw-rectangle* (sheet-medium pane) x0 y0 x1 y1 :ink +white+)
+    (draw-grid pane x0 y0 x1 y1 50)
     (let ((scene (world-scene pane)))
       (mapcar (lambda (x) (draw-object pane x)) (scene-models scene))
       )))
 
+(defmethod draw-grid ((pane world2d-pane) x0 y0 x1 y1 step)
+  (iter (for x from x0 to x1 by step)
+	(draw-line* pane x y0 x y1))
+  (iter (for y from y0 to y1 by step)
+	(draw-line* pane x0 y x1 y)))
+  
 (defmethod draw-object ((pane world2d-pane) (object object))
   (let* ((obj-vis (object-visual object))
 	 (pos (model-pos obj-vis))
