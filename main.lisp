@@ -1,39 +1,63 @@
 (in-package :cl-cu2e)
 
+(defclass shape () ())
 
-;; (defmethod sat-x ((a vec2) (b vec2))
-;;   (> (vec2-x a) (vec2-x b)))
+(defclass model ()
+  ((pos :initarg :pos :accessor model-pos)
+   (shape :initarg :shape :accessor model-shape)))
 
-;; (defmethod sat-y ((a vec2) (b vec2))
-;;   (> (vec2-y a) (vec2-y b)))
+(defclass visual-model (model) ())
 
-(defclass aabb ()
-  ((min :initarg :min :accessor aabb-min)
-   (max :initarg :max :accessor aabb-max)))
+(defmethod make-visual-model ((pos vec2) (shape shape))
+  (make-instance 'visual-model :pos pos :shape shape))
+  
+(defclass physical-model (model) ())
 
-(defmethod make-aabb ((vec-min vec2) (vec-max vec2))
-  (make-instance 'AABB :min vec-min :max vec-max))   
+(defmethod make-physical-model ((pos vec2) (shape shape))
+  (make-instance 'physical-model :pos pos :shape shape))
 
-;; (defmethod aabb-intersect-p ((a aabb) (b aabb)))
-;; (defmethod AABBvsAABB ((a AABB) (b AABB))
-;;   "fix there is a problem inverse of example function is not correct"
-;;   (let ((a-max (aabb-max a))
-;; 	(a-min (aabb-min a))
-;;         (b-max (aabb-max b))
-;;         (b-min (aabb-min b)))
-;;     (not (and (or (sat-x a-max b-min) (sat-x b-max a-min))
-;; 	      (or (sat-y a-max b-min) (sat-y b-max a-min))))))
-       
-(defclass circle ()
-  ((radius :initarg :radius :accessor circle-radius)
-   (center :initarg :center :accessor circle-center)))
+(defclass circle (shape)
+  ((radius :initarg :radius :accessor circle-radius)))
 
-(defmethod make-circle (radius (center vec2))
-  (make-instance 'circle :radius radius :center center))   
+(defun make-circle (rad)
+  (make-instance 'circle :radius rad))
+  
+(defclass object ()
+  ((physical :initarg :physical :accessor object-physical)
+   (visual :initarg :visual :accessor object-visual)))
 
-(defmethod circle-intersect-p ((a circle) (b circle))
-  (let* ((total-r (expt (+ (circle-radius a) (circle-radius b)) 2))
-	(dist-vec (v- (circle-center a) (circle-center b)))
-	(dist (+ (expt (vx dist-vec) 2) (expt (vy dist-vec) 2))))
-    (> total-r dist)))
+(defmethod make-object ((phy physical-model) (vis visual-model))
+  (make-instance 'object :physical phy :visual vis))
 
+(defclass scene ()
+  ((name :initarg :name :accessor scene-name)
+   (models :initform nil :accessor scene-models)
+   (dt :initarg dt :accessor scene-dt)
+   (thread :initform nil :accessor scene-thread)
+   (continue-thread :initform nil :accessor continue-thread)
+   (scene-thread-hook :initform nil)
+   (dims :initform nil :reader scene-dims)))
+  
+(defclass scene2d (scene)
+  ((dims :initform 2)))
+
+(defun make-scene (name dt)
+  (make-instance 'scene :name name))
+
+(defmethod add-object ((scene scene) (object object))
+  (push object (scene-models scene)))
+
+(defmethod clear-objects ((scene scene))
+  (setf (scene-models scene) nil))
+  
+(defmethod stop-thread ((scene scene))
+  (setf (continue-thread scene) nil))
+  
+(defmethod start-thread ((scene scene))
+  (setf (continue-thread scene) T)
+  (setf (scene-thread scene) (bt:make-thread
+			      (lambda ()
+				(loop while (continue-thread scene) do
+				     (sleep 2)
+				     (format t "after ~a~%" (continue-thread scene)))))))
+				

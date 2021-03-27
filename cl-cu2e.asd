@@ -3,7 +3,9 @@
 (require :alexandria)
 (require :prove)
 (require :3d-vectors)
+(require :3d-matrices)
 (require :mcclim)
+(require :cl-hooks)
 
 (defsystem :cl-cu2e
   :description ""
@@ -11,7 +13,7 @@
   :author "Mustafa Parlaktuna <mparlaktuna@gmail.com>"
   :license "GPLv3"
   :serial t
-  :depends-on (:alexandria :3d-vectors :clim)
+  :depends-on (:alexandria :3d-vectors :3d-matrices :clim :cl-hooks)
   :in-order-to ((test-op (test-op cl-cu2e-test)))
   :components ((:file "package")
 	       (:file "main")
