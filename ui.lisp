@@ -5,6 +5,7 @@
    (x :initform 0.0 :accessor x)
    (y :initform 0.0 :accessor y)
    (scene :initarg :scene :accessor world-scene)
+   (scene-tf :initform (mat3 '(1 0 200 0 1 300 0 0 1)) :accessor scene-tf)
    (dragging :initform nil :accessor dragging)))
 
 (defun draw-world2d (pane)
@@ -19,7 +20,10 @@
 (defmethod draw-object ((pane world2d-pane) (object object))
   (let* ((obj-vis (object-visual object))
 	 (pos (model-pos obj-vis))
-         (shape (model-shape obj-vis)))
+         (shape (model-shape obj-vis))
+         (scene-tf (scene-tf pane))
+         (pos3d (m* scene-tf (v+ (vec 0 0 1) (vxy_ pos)))))
+    (format t "~a" pos3d)
     (draw-shape pane pos shape)))
 
 (defmethod draw-shape ((pane world2d-pane) (pos vec2) (shape circle))
@@ -60,6 +64,11 @@
 	 (scene (world-scene gadget)))
     (stop-thread scene)))
 
+(define-cl-cu2e-viewer-command (com-clear-objects :name t)
+    ()
+  (let* ((gadget (find-pane-named *application-frame* 'world2d))
+	 (scene (world-scene gadget)))
+    (clear-objects scene)))
 
 (defun run-cl-cu2e-viewer ()
   (run-frame-top-level (clim:make-application-frame 'cl-cu2e-viewer)))

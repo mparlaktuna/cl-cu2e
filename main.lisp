@@ -1,5 +1,7 @@
 (in-package :cl-cu2e)
 
+(defclass shape () ())
+
 (defclass model ()
   ((pos :initarg :pos :accessor model-pos)
    (shape :initarg :shape :accessor model-shape)))
@@ -13,8 +15,6 @@
 
 (defmethod make-physical-model ((pos vec2) (shape shape))
   (make-instance 'physical-model :pos pos :shape shape))
-
-(defclass shape () ())
 
 (defclass circle (shape)
   ((radius :initarg :radius :accessor circle-radius)))
@@ -47,6 +47,9 @@
 (defmethod add-object ((scene scene) (object object))
   (push object (scene-models scene)))
 
+(defmethod clear-objects ((scene scene))
+  (setf (scene-models scene) nil))
+  
 (defmethod stop-thread ((scene scene))
   (setf (continue-thread scene) nil))
   
