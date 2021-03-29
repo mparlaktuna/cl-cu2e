@@ -8,9 +8,6 @@
    (scene-tf :initform (mat3 '(1 0 200 0 1 300 0 0 1)) :accessor scene-tf)
    (dragging :initform nil :accessor dragging)))
 
-(defun draw-world2d (pane)
-  (format t "drawing 3d world"))
-
 (defmethod handle-repaint ((pane world2d-pane) region)
   (with-bounding-rectangle* (x0 y0 x1 y1) (sheet-region pane)
     (draw-rectangle* (sheet-medium pane) x0 y0 x1 y1 :ink +white+)
@@ -24,6 +21,8 @@
 	(draw-line* pane x y0 x y1))
   (iter (for y from y0 to y1 by step)
 	(draw-line* pane x0 y x1 y)))
+
+(defmethod draw-center ((pane world2d-pane)))
   
 (defmethod draw-object ((pane world2d-pane) (object object))
   (let* ((obj-vis (object-visual object))
@@ -36,6 +35,10 @@
 
 (defmethod draw-shape ((pane world2d-pane) (pos vec2) (shape circle))
   (draw-circle* pane (vx pos) (vy pos) (circle-radius shape) :filled nil))
+
+
+
+
     
 (define-application-frame cl-cu2e-viewer ()
   ()
@@ -80,6 +83,15 @@
     (handle-repaint gadget (or (pane-viewport-region gadget)
 			       (sheet-region gadget)))))
 
+(define-cl-cu2e-viewer-command (com-bce :keystroke (#\r :control)) ()
+  (format t "ctrlr"))
+
+(define-cl-cu2e-viewer-command (com-qwe :keystroke (#\x :meta)) ()
+  (format t "meta x"))
+
+
+(define-cl-cu2e-viewer-command (com-asd :keystroke (#\t :control)) ()
+  (format t "ctrlt"))
 
 (defun run-cl-cu2e-viewer ()
   (run-frame-top-level (clim:make-application-frame 'cl-cu2e-viewer)))
