@@ -3,8 +3,8 @@
 (defclass shape () ())
 
 (defclass model ()
-  ((pos :initarg :pos :accessor model-pos)
-   (shape :initarg :shape :accessor model-shape)))
+  ((pos :type vec2 :initarg :pos :accessor model-pos)
+   (shape :type shape :initarg :shape :accessor model-shape)))
 
 (defclass visual-model (model) ())
 
@@ -23,11 +23,12 @@
   (make-instance 'circle :radius rad))
   
 (defclass object ()
-  ((physical :initarg :physical :accessor object-physical)
+  ((name :initarg :name :accessor object-name)
+   (physical :initarg :physical :accessor object-physical)
    (visual :initarg :visual :accessor object-visual)))
 
-(defmethod make-object ((phy physical-model) (vis visual-model))
-  (make-instance 'object :physical phy :visual vis))
+(defmethod make-object (name (phy physical-model) (vis visual-model))
+  (make-instance 'object :name name :physical phy :visual vis))
 
 (defclass scene ()
   ((name :initarg :name :accessor scene-name)
