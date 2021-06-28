@@ -24,7 +24,7 @@
 
 ;; (defmethod draw-center ((pane world2d-pane)))
   
-;; (defmethod draw-object ((pane world2d-pane) (object object))
+;; (defmetho;; d draw-object ((pane world2d-pane) (object object))
 ;;   (let* ((obj-vis (object-visual object))
 ;; 	 (pos (model-pos obj-vis))
 ;;          (shape (model-shape obj-vis))
@@ -60,9 +60,14 @@
   ;; display pbjects
   (let ((scene (viewer-scene *application-frame*)))
     (dolist (object (scene-models scene))
-      (write-string (object-name object) stream))
+      (present object 'object :stream stream)
+      (terpri stream))
       ))
 
+(define-presentation-type object ())
+
+(define-presentation-method present (obj (type object) stream view &key)
+  (draw-rectangle* stream 10 10 50 50 :filled nil))
 
 (define-cl-cu2e-viewer-command (com-add-object :name t)
     ()
@@ -73,8 +78,19 @@
 
 
 (define-cl-cu2e-viewer-command (com-quit :name t :menu "Quit")
-    ()
+    ()  
   (frame-exit *application-frame*))
+
+(define-cl-cu2e-viewer-command com-select-object
+    ((object object :gesture :select))
+  (+ 2 2))
+
+;; (define-cl-cu2e-viewer-command com-update-object-name
+;;     ((object object :gesture :select))
+;;   (let ((new-name (accept 'string :stream (frame-standard-input *application-frame*)
+;; 			  :prompt "New Name" :default (object-name object))))
+;;     (setf (object-name object) new-name)))
+
 
 ;; (define-cl-cu2e-viewer-command (com-create-circle :name t)
 ;;     ((radius 'number))
